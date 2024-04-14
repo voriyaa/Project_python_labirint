@@ -1,6 +1,9 @@
-from src.Cell.Cell import *
+from src.Cell.Cell import Cell
 from src.Cell.remove_walls import remove_walls
-from src.Wall.wall import *
+from src.Wall.wall import create_wall_rects
+from src.Keyboard.Keyboard import keyboard
+from src.Constants.Constants import *
+import pygame
 
 
 def generate_maze(screen, clock, walk_right, walk_left, walk_up_down):
@@ -62,43 +65,26 @@ def generate_maze(screen, clock, walk_right, walk_left, walk_up_down):
         wall_rects = create_wall_rects(board)
 
         player_rect = pygame.Rect(player_x - 1, player_y - 1, 26, 37)
+        last_cell = board[cols * rows - 1]
+
+        if player_rect.colliderect(pygame.Rect(last_cell.x + CELL_SIZE - 2, last_cell.y, 2, CELL_SIZE)):
+            player_x = 15
+            player_y = 12
+
         for wall_rect in wall_rects:
             if player_rect.colliderect(wall_rect):
                 player_x, player_y = previous_player_x, previous_player_y
                 break
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                pygame.quit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    walking_left = True
-                    walking_right = False
-                    walking_up = False
-                    walking_down = False
-                    walk_index = 0
-                elif event.key == pygame.K_RIGHT:
-                    walking_right = True
-                    walking_left = False
-                    walking_up = False
-                    walking_down = False
-                    walk_index = 0
-                elif event.key == pygame.K_UP:
-                    walking_up = True
-                    walking_down = False
-                    walking_left = False
-                    walking_right = False
-                    walk_index = 0
-                elif event.key == pygame.K_DOWN:
-                    walking_down = True
-                    walking_up = False
-                    walking_left = False
-                    walking_right = False
-                    walk_index = 0
+        (walking_left, walking_right, walking_up,
+         walking_down, walk_index, running) = keyboard(walking_left, walking_right, walking_up,
+                                                       walking_down, walk_index, running)
+        if not running:
+            pygame.quit()
+
         previous_player_x, previous_player_y = player_x, player_y
 
         if maze_generated:
-            clock.tick(10)
+            clock.tick(50)
         else:
             clock.tick(200)

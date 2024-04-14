@@ -17,5 +17,3 @@ def remove_walls(current_cell, next_cell):
     elif dy == -CELL_SIZE:
         current_cell.walls['bottom'] = False
         next_cell.walls['top'] = False
-
-

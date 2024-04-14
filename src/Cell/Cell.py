@@ -69,4 +69,3 @@ class Cell:
             return random.choice(neighbors)
         else:
             return False
-

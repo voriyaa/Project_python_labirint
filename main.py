@@ -29,3 +29,4 @@ walk_up_down = [
 ]
 
 generate_maze(screen, clock, walk_left, walk_right, walk_up_down)
+
